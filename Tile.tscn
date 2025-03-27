@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://him6rtfo6m8s"]
+
+[ext_resource type="Script" uid="uid://do7grpmvf6jsu" path="res://tile.gd" id="1_j13wd"]
+[ext_resource type="Texture2D" uid="uid://brj6yld0wt5u0" path="res://assets/Hidden.png" id="2_je3b2"]
+
+[node name="Tile" type="Button"]
+offset_right = 74.0
+offset_bottom = 72.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+icon = ExtResource("2_je3b2")
+icon_alignment = 1
+script = ExtResource("1_j13wd")
+
+[connection signal="pressed" from="." to="." method="_on_left_click"]
