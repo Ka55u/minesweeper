@@ -4,24 +4,43 @@ extends Node2D
 @onready var bomb_count = 10
 const EXPLOSION = preload("res://assets/Explosion.png")
 
+
 var grid = []
 var score_count = 0
 
 @onready var grid_container: GridContainer = $Control/GridContainer
 @onready var status: Label = $Status
 @onready var score: Label = $Score
-@onready var to_menu: Button = $ToMenu
+@onready var v_box_container: VBoxContainer = $VBoxContainer
+@onready var to_menu: Button = $VBoxContainer/ToMenu
+@onready var restart: Button = $VBoxContainer/Restart
+@onready var victory_player: AudioStreamPlayer = $victoryPlayer
+@onready var camera_2d: Camera2D = $Camera2D
+@onready var control: Control = $Control
+
 
 
 func _ready():
+	if GlobalVar.is_hard:
+		grid_size = 12
+		bomb_count = 30
+		score.text = "Score:" + str(124 - score_count) + "/124"
+		control.set_position(Vector2(291.0, 118.0))
+	else:
+		control.set_position(Vector2(328.0, 136.0))
+		grid_size = 10
+		bomb_count = 20
+		score.text = "Score:" + str(80 - score_count) + "/80"
+
+	v_box_container.visible = true
 	GlobalVar.first_bomb = true
-	to_menu.visible = false
+	to_menu.visible = true
 	status.text = "Welcome to minesweeper!"
 	randomize()
 	create_grid()
 	place_bombs()
 	calculate_nearby_bombs()
-	
+		
 
 func create_grid():
 	#logic for creating the grid
@@ -40,6 +59,8 @@ func create_grid():
 
 #placing bombs in the grid
 func place_bombs():
+	if GlobalVar.is_hard == true:
+		bomb_count = 20
 	var bombs_placed = 0
 	while bombs_placed < bomb_count:
 		var index = randi() % (grid_size * grid_size)
@@ -77,7 +98,16 @@ func game_over():
 		if tile.is_bomb and not tile.is_revealed:
 			tile.reveal()
 	status.text = "GAME OVER!"
-	to_menu.visible = true
+
+func update_score():
+	score_count = 0
+	for tile in grid:
+		if not tile.is_revealed and not tile.is_bomb:
+			score_count += 1
+	if GlobalVar.is_hard == true:
+		score.text = "Score:" + str(124 - score_count) + "/124"
+	else:
+		score.text = "Score:" + str(80-score_count) + "/80"
 	
 #checks for win condition when all non bomb tiles are revealed
 func win_condition():
@@ -86,11 +116,18 @@ func win_condition():
 		if not tile.is_revealed and not tile.is_bomb:
 			unrevealed += 1
 	if unrevealed == 0:
+		for tile in grid:
+			if tile.is_bomb and not tile.is_revealed:
+				GlobalVar.first_bomb = false
+				tile.reveal()
+		victory_player.play()
 		status.text = "VICTORY!"
-		to_menu.visible = true
 		
 func _on_to_menu_pressed():
 	get_tree().change_scene_to_file("res://MainMenu.tscn")
+	
+func _on_restart_pressed():
+	get_tree().reload_current_scene()
 		
 #input handling for arrow keys, navigation in grid
 func _unhandled_input(event: InputEvent):

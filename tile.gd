@@ -12,6 +12,9 @@ const BACK_IMAGE = preload("res://assets/Hidden.png")
 const FLAGGED = preload("res://assets/Flagged.png")
 const EMPTY = preload("res://assets/Empty.png")
 const EXPLOSION = preload("res://assets/Explosion.png")
+@onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
+@onready var grid_select_player: AudioStreamPlayer = $Grid_select_player
+@onready var flag_place_player: AudioStreamPlayer = $flag_place_player
 @onready var tile: Button = self
 
 func _ready():
@@ -52,15 +55,21 @@ func reveal():
 		if GlobalVar.first_bomb == true:
 			GlobalVar.first_bomb = false
 			await get_tree().create_timer(1.0).timeout
+			audio_stream_player.play()
 			icon = EXPLOSION
+			
 		emit_signal("bomb_revealed")
 	else:
+		var main = get_parent().get_parent().get_parent()
+		if main and main.has_method("update_score"):
+			main.update_score()
+		main.update_score()
+		grid_select_player.play()
 		icon = EMPTY
 		if nearby_bombs > 0:
 			text = str(nearby_bombs)
 		else:
 			text = str("")
-		var main = get_parent().get_parent()
 		if main and main.has_method("win_condition"):
 			main.win_condition()
 		disabled = true
@@ -70,6 +79,8 @@ func flag_toggle():
 		return
 	is_flagged = not is_flagged
 	if is_flagged:
+		flag_place_player.play()
 		icon = FLAGGED
 	else:
+		
 		icon = BACK_IMAGE

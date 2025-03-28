@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3 uid="uid://xdi1awd0bl4m"]
+
+[ext_resource type="Script" uid="uid://bnf2wfpwisctn" path="res://Minesweeper.gd" id="1_wtcfe"]
+
+[node name="Minesweeper" type="Node2D"]
+script = ExtResource("1_wtcfe")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1149.0
+offset_bottom = 648.0
+color = Color(0.0527482, 0.175814, 0.3096, 1)
+
+[node name="Score" type="Label" parent="."]
+offset_left = 57.0
+offset_top = 505.0
+offset_right = 136.0
+offset_bottom = 528.0
+text = "AA"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 330.0
+offset_top = 167.0
+offset_right = 778.0
+offset_bottom = 543.0
+
+[node name="GridContainer" type="GridContainer" parent="Control"]
+layout_mode = 1
+scale = Vector2(0.56, 0.56)
+columns = 10
+
+[node name="Status" type="Label" parent="."]
+offset_left = 218.0
+offset_top = 34.0
+offset_right = 874.0
+offset_bottom = 119.0
+theme_override_font_sizes/font_size = 40
+text = "aaaa"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ToMenu" type="Button" parent="."]
+offset_left = 932.0
+offset_top = 469.0
+offset_right = 1066.0
+offset_bottom = 528.0
+text = "Back to menu"
+
+[connection signal="pressed" from="ToMenu" to="." method="_on_to_menu_pressed"]

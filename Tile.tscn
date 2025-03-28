@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://him6rtfo6m8s"]
+[gd_scene load_steps=6 format=3 uid="uid://him6rtfo6m8s"]
 
 [ext_resource type="Script" uid="uid://do7grpmvf6jsu" path="res://tile.gd" id="1_j13wd"]
 [ext_resource type="Texture2D" uid="uid://brj6yld0wt5u0" path="res://assets/Hidden.png" id="2_je3b2"]
+[ext_resource type="AudioStream" uid="uid://chhcupie56fyj" path="res://assets/sounds/bomb.wav" id="3_au6lh"]
+[ext_resource type="AudioStream" uid="uid://3hbil1dsdbmn" path="res://assets/sounds/Menu_tic.wav" id="4_y0vo0"]
+[ext_resource type="AudioStream" uid="uid://dk5bo58ds5jla" path="res://assets/sounds/flag_place.wav" id="5_07d5j"]
 
 [node name="Tile" type="Button"]
 offset_right = 74.0
@@ -10,5 +13,18 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 icon = ExtResource("2_je3b2")
 icon_alignment = 1
 script = ExtResource("1_j13wd")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_au6lh")
+
+[node name="Grid_select_player" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_y0vo0")
+volume_db = -6.559
+pitch_scale = 1.18
+
+[node name="flag_place_player" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_07d5j")
+volume_db = -3.747
+pitch_scale = 0.82
 
 [connection signal="pressed" from="." to="." method="_on_left_click"]

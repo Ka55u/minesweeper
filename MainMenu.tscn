@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dvxl11nwweyi3"]
+[gd_scene load_steps=3 format=3 uid="uid://dvxl11nwweyi3"]
 
 [ext_resource type="Script" uid="uid://bbyy68auq6yjg" path="res://main_menu.gd" id="1_i26rj"]
+[ext_resource type="AudioStream" uid="uid://3hbil1dsdbmn" path="res://assets/sounds/Menu_tic.wav" id="2_eiy7p"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -56,5 +57,21 @@ text = "Minesweeper"
 horizontal_alignment = 1
 autowrap_mode = 3
 
+[node name="Menu_tic_player" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_eiy7p")
+volume_db = -7.496
+pitch_scale = 0.86
+
+[node name="HardMode" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 533.0
+offset_top = 229.0
+offset_right = 619.0
+offset_bottom = 260.0
+text = "Easy"
+
+[connection signal="focus_entered" from="VBoxContainer/Play" to="." method="_on_play_hovered"]
 [connection signal="pressed" from="VBoxContainer/Play" to="." method="_on_play_clicked"]
+[connection signal="focus_entered" from="VBoxContainer/Exit" to="." method="_on_exit_hovered"]
 [connection signal="pressed" from="VBoxContainer/Exit" to="." method="_on_exit_clicked"]
+[connection signal="toggled" from="HardMode" to="." method="_on_hardmode_toggled"]
