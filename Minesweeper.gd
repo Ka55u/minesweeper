@@ -134,6 +134,10 @@ func _unhandled_input(event: InputEvent):
 	if event is InputEventKey and event.pressed:
 		var current_tile = null
 		#find tile that has focus
+		if event.keycode == KEY_ESCAPE:
+			_on_to_menu_pressed()
+		elif event.keycode == KEY_R:
+			_on_restart_pressed()
 		for tile in grid:
 			if tile.has_focus():
 				current_tile = tile
