@@ -69,5 +69,15 @@ text = "Back to menu"
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 
+[node name="ControlsInfo" type="Label" parent="."]
+offset_right = 260.0
+offset_bottom = 153.0
+text = "Flag: Space / Right Mouse Button
+Select: Enter / Left Mouse Button
+Move: Directional Keys / Tab
+Restart: R
+Exit: Esc
+"
+
 [connection signal="pressed" from="VBoxContainer/Restart" to="." method="_on_restart_pressed"]
 [connection signal="pressed" from="VBoxContainer/ToMenu" to="." method="_on_to_menu_pressed"]
