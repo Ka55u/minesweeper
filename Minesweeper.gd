@@ -48,7 +48,8 @@ func create_grid():
 	for i in range(grid_size * grid_size):
 		var tile_scene = preload("res://Tile.tscn")
 		var tile = tile_scene.instantiate()
-		
+		tile.grid_x = i % grid_size
+		tile.grid_y = int(i / grid_size)
 		#connecting bombs through a signal to handle game over
 		tile.connect("bomb_revealed", Callable(self, "_on_bomb_revealed"))
 		grid.append(tile)
@@ -56,11 +57,27 @@ func create_grid():
 		
 	if grid.size() > 0:
 		grid[0].grab_focus()
-
+		
+func reveal_empty_neighbors(x, y):
+	print("revealing neighbors at", x, y)
+	if x < 0 or x >= grid_size or y < 0 or y >= grid_size:
+		return
+	var index = x + y * grid_size
+	var tile = grid[index]
+	if tile.is_revealed or tile.is_bomb:
+		return
+	tile.reveal()
+	update_score()
+	if tile.nearby_bombs > 0:
+		return
+	for dx in range(-1, 2):
+		for dy in range(-1, 2):
+			if dx == 0 and dy == 0:
+				continue
+			reveal_empty_neighbors(x + dx, y + dy)
+				
 #placing bombs in the grid
 func place_bombs():
-	if GlobalVar.is_hard == true:
-		bomb_count = 20
 	var bombs_placed = 0
 	while bombs_placed < bomb_count:
 		var index = randi() % (grid_size * grid_size)
@@ -87,7 +104,7 @@ func calculate_nearby_bombs():
 						var neighbor_index = nx + ny * grid_size
 						if grid[neighbor_index].is_bomb:
 							count += 1
-					tile.nearby_bombs = count
+			tile.nearby_bombs = count
 
 func _on_bomb_revealed():
 	game_over()
@@ -128,6 +145,18 @@ func _on_to_menu_pressed():
 	
 func _on_restart_pressed():
 	get_tree().reload_current_scene()
+	
+func _on_tile_clicked(tile):
+	tile.reveal()
+	if not tile.is_bomb and tile.nearby_bombs == 0:
+		for dx in range(-1, 2):
+				for dy in range(-1, 2):
+					if dx == 0 and dy == 0:
+						continue
+					reveal_empty_neighbors(tile.grid_x + dx, tile.grid_y + dy)
+	update_score()
+	win_condition()
+
 		
 #input handling for arrow keys, navigation in grid
 func _unhandled_input(event: InputEvent):

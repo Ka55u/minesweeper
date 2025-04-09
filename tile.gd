@@ -6,6 +6,8 @@ var is_bomb = false
 var is_revealed = false
 var is_flagged = false
 var nearby_bombs = 0
+var grid_x = 0
+var grid_y = 0
 
 const BOMB = preload("res://assets/Bomb.png")
 const BACK_IMAGE = preload("res://assets/Hidden.png")
@@ -39,9 +41,11 @@ func _gui_input(event):
 			flag_toggle()
 			accept_event()
 
-#listens to right mouse button, works with signal
+#listens to right mouse button, works with signal, calls main function to reveal tiles
 func _on_left_click():
-	reveal()
+	grid_select_player.play()
+	var main = get_parent().get_parent().get_parent()
+	main._on_tile_clicked(self)
 	
 
 func reveal():
@@ -57,23 +61,15 @@ func reveal():
 			await get_tree().create_timer(1.0).timeout
 			audio_stream_player.play()
 			icon = EXPLOSION
-			
 		emit_signal("bomb_revealed")
 	else:
-		var main = get_parent().get_parent().get_parent()
-		if main and main.has_method("update_score"):
-			main.update_score()
-		main.update_score()
-		grid_select_player.play()
 		icon = EMPTY
 		if nearby_bombs > 0:
 			text = str(nearby_bombs)
 		else:
-			text = str("")
-		if main and main.has_method("win_condition"):
-			main.win_condition()
+			text = ""
 		disabled = true
-
+	
 func flag_toggle():
 	if is_revealed:
 		return
